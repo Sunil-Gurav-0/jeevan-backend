@@ -16,5 +16,5 @@ const usersSchema = new mongoose.Schema({
     timestamps: true,
 });
 
-const usersModel = mongoose.model("User", usersSchema); // Capital 'U' for convention
+const usersModel = mongoose.model('User', userSchema); // Capital 'U' for convention
 module.exports = usersModel;
