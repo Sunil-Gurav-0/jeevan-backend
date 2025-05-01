@@ -18,15 +18,34 @@ const deliveryRoutes = require("./routes/deliveryRoutes");
 
 const app = express();
 
+// ✅ Allow JSON
+app.use(express.json());
+
+
+app.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "https://jeevan-frontend-ten.vercel.app");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+
+    // For preflight requests
+    if (req.method === "OPTIONS") {
+        return res.sendStatus(200);
+    }
+
+    next();
+});
+
+
 // Connect to MongoDB
 connectDB();
 
 // Middleware
-app.use(cors({
-    origin: "https://jeevan-frontend-ten.vercel.app",
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    credentials: true
-}));
+// app.use(cors({
+//     origin: "https://jeevan-frontend-ten.vercel.app",
+//     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+//     credentials: true
+// }));
 
 // ✅ Handle Preflight (OPTIONS) requests globally
 app.options("*", cors());
