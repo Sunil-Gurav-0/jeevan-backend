@@ -3,6 +3,9 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 
+// Load environment variables
+dotenv.config();
+
 // Route imports
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
@@ -12,8 +15,6 @@ const profileRoutes = require("./routes/profileRoutes");
 const purchaseRoutes = require("./routes/purchaseRoutes");
 const productRoutes = require("./routes/productRoutes");
 const deliveryRoutes = require("./routes/deliveryRoutes");
-
-dotenv.config(); // Load environment variables
 
 const app = express();
 
@@ -34,22 +35,12 @@ app.use("/api/purchase", purchaseRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/delivery", deliveryRoutes);
 
-// Default route (for root "/")
+// Default route
 app.get("/", (req, res) => {
     res.send("✅ JeevanAmrit Backend Server is Running Successfully!");
 });
 
-// Global error handler (should come after all routes)
-app.use((err, req, res, next) => {
-    console.error('🚨 Global Error Handler:', err.stack);
-    res.status(500).json({
-        success: false,
-        error: process.env.NODE_ENV === 'development' ? err.message : 'Server Error',
-        message: 'An unexpected error occurred'
-    });
-});
-
-// 404 handler (if no route matches)
+// 404 handler (for undefined routes)
 app.use((req, res) => {
     res.status(404).json({
         success: false,
@@ -57,8 +48,15 @@ app.use((req, res) => {
     });
 });
 
-// Start server
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-    console.log(`✅ Server is running on port ${PORT}`);
+// Global error handler
+app.use((err, req, res, next) => {
+    console.error('🚨 Global Error Handler:', err);
+    res.status(500).json({
+        success: false,
+        error: process.env.NODE_ENV === 'development' ? err.message : 'Server error',
+        message: 'An unexpected error occurred'
+    });
 });
+
+// Export the app for Vercel
+module.exports = app;
