@@ -22,7 +22,16 @@ const app = express();
 connectDB();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: "https://jeevan-frontend-ten.vercel.app",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true
+}));
+
+// ✅ Handle Preflight (OPTIONS) requests globally
+app.options("*", cors());
+
+// Middleware
 app.use(express.json());
 
 // API Routes
